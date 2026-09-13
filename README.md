@@ -1,4 +1,35 @@
-# SignalFoundry
+# SignalFoundry v2
+
+An interactive idea shelf and launch workbench with an animated navy/pastel visual identity.
+
+## Version 2
+
+- 18 distinct editorial starter concepts across content, software and products
+- Text search, category/time filters, sorting and an explicit empty state
+- Favourite ideas persisted in browser local storage
+- Audience- and time-aware four-week plans with eight tracked tasks
+- Markdown plan download and three tailored prompt templates
+- Revenue less variable and fixed costs calculator, with invalid-input handling
+- Reduced-motion support and a manual animation pause button
+- Native keyboard-accessible dialogs and responsive layouts
+
+This is a static, rule-based planning application. It has no connected AI API,
+payments, live market data, cloud accounts or automated publishing service.
+Concept costs and time requirements are editorial estimates, not verified quotes.
+Plans and favourites only persist in the same browser and can be lost if its data
+is cleared. Export plans for a portable backup.
+
+## Design research
+
+Reviewed Starter Story's clear searchable business discovery and concrete breakdowns,
+IdeaBrowser's published database/idea descriptions, and Gumroad's direct creator
+positioning. Original artwork is implemented in CSS; no competitor assets are copied.
+
+- https://www.starterstory.com/
+- https://www.ideabrowser.com/
+- https://gumroad.com/
+
+## Original version notes
 
 A responsive, static decision tool that compares three AI-assisted online business models: niche content, micro-SaaS and digital products.
 

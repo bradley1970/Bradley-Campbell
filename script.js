@@ -1,123 +1,61 @@
-const models = {
-  content: {
-    name: "Niche content",
-    headline: "Build a useful corner of the internet.",
-    description: "Choose a narrow audience, map the questions they repeatedly ask, and publish original answers strengthened by firsthand experience, examples and evidence.",
-    strengths: ["Compounds as your useful content library grows", "Multiple monetisation routes", "Can start without building software"],
-    risk: "Publishing generic AI text is not a strategy. Distribution, original insight and trust are the work."
-  },
-  saas: {
-    name: "Micro-SaaS",
-    headline: "Remove one expensive annoyance.",
-    description: "Start with a repeated workflow for one type of customer. Validate the pain manually, then turn the smallest valuable part into software.",
-    strengths: ["Recurring revenue can improve predictability", "Clear value when tied to time or money saved", "A small customer base can validate demand"],
-    risk: "Code is rarely the hardest part. Customer access, onboarding, support and retention decide whether it survives."
-  },
-  products: {
-    name: "Digital products",
-    headline: "Package a shortcut to a real outcome.",
-    description: "Turn a repeatable method into a template, toolkit, guide or system for one buyer and one urgent job—not a vague bundle for everyone.",
-    strengths: ["Fast and inexpensive to test", "No physical stock or fulfilment", "Useful bridge from service work to scalable revenue"],
-    risk: "Low production cost also means low barriers. Specificity, proof and distribution create the defensibility."
-  }
-};
-
-const quiz = [
-  { q: "Which kind of work gives you energy?", answers: [
-    ["Researching and explaining a subject", "content"], ["Fixing a repeated workflow", "saas"], ["Packaging a method into something useful", "products"]
-  ]},
-  { q: "How quickly do you need market feedback?", answers: [
-    ["I can wait while traffic compounds", "content"], ["A few weeks is fine", "saas"], ["As quickly as possible", "products"]
-  ]},
-  { q: "What sounds most sustainable to you?", answers: [
-    ["Publishing consistently", "content"], ["Talking to users and improving a tool", "saas"], ["Launching and promoting new offers", "products"]
-  ]}
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = v => String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rows = [
+['Trade tool field notes','Content','trades tools DIY','Test everyday tools and explain which jobs they actually suit.','apprentices buying their first toolkit','Publish a photographed comparison of three tools you already own.','Affiliate links to genuinely tested products, clearly disclosed.',5,40,'Do not invent hands-on tests or recommend unsafe working practices.','✎'],
+['Small-space garden guide','Content','gardening homes Scotland','Practical growing experiments for balconies and tiny gardens.','renters with a small outdoor space','Document one container-growing experiment with weekly photos.','Relevant affiliate products and advertising once there is traffic.',5,25,'Seasonal demand and slow growing cycles make fast conclusions unreliable.','✿'],
+['Weekend without a car','Content','travel local walks','Detailed local itineraries that work entirely by public transport.','travellers planning a car-free weekend','Personally check one route, its accessibility and transport timings.','Disclosed accommodation referrals and downloadable itineraries.',8,60,'Transport schedules change; keep published routes dated and reviewed.','↗'],
+['Indoor cat enrichment','Content','pets cats home','Original play and enrichment ideas for indoor cats.','owners of bored indoor cats','Photograph three supervised enrichment activities and record what worked.','Disclosed product referrals and printable activity plans.',5,30,'Avoid medical claims; direct health and behavioural concerns to a vet.','ϟ'],
+['Desk setup on a budget','Content','gaming tech home','Honest workspace improvements using inexpensive equipment.','remote workers in shared homes','Measure and photograph one before-and-after desk setup.','Disclosed equipment referrals and layout downloads.',7,50,'Product costs change; separate measured results from personal preference.','⌘'],
+['First freelance year','Content','freelance admin work','Explain the practical admin behind starting independent work.','new freelancers organising their first projects','Interview three freelancers about one recurring admin problem.','Template sales and disclosed software referrals.',6,20,'Tax and legal topics need qualified review and current sources.','▤'],
+['Quote follow-up helper','Software','trades quotes business','Keep unanswered quotes and next actions in one simple place.','self-employed tradespeople','Run a manual quote tracker for two volunteers before coding.','Monthly subscription for reminders and quote tracking.',10,80,'Do not send automatic messages without the business and recipient permissions.','↗'],
+['Client feedback inbox','Software','design freelance feedback','Collect scattered comments into a single revision checklist.','freelance designers','Sort one consenting client project manually into agreed actions.','Subscription per freelancer or small team.',10,60,'Client documents are confidential; obtain consent and plan data deletion.','≋'],
+['Workshop booking board','Software','local classes bookings','A lightweight attendance and booking organiser for small classes.','independent workshop hosts','Pilot a manual booking board for one upcoming class.','Monthly host subscription.',12,100,'Bookings need conflict handling and clear cancellation rules.','▦'],
+['Content refresh tracker','Software','SEO blogs content','Flag published articles that need facts, links or screenshots checked.','small editorial teams','Audit ten pages and prioritise changes in a spreadsheet.','Subscription by number of tracked pages.',8,40,'A freshness reminder does not prove factual accuracy or search ranking.','↻'],
+['Pet sitter handover','Software','pets cats dogs handover','Keep feeding instructions, visit notes and emergency contacts together.','independent pet sitters','Test a shared handover form with one consenting sitter.','Monthly sitter subscription.',10,60,'Addresses and access instructions need strict privacy and security.','⌂'],
+['Stock re-order nudge','Software','shops stock retail','Help tiny shops notice low stock before a busy weekend.','independent craft retailers','Track twenty stock items manually for one retailer.','Monthly shop subscription.',12,100,'Incorrect stock data can create unnecessary or missed purchases.','▥'],
+['Trade quote starter kit','Products','trades templates quotes','Editable quote layouts, scope checklists and follow-up wording.','new self-employed tradespeople','Ask three tradespeople to complete a sample quote using your draft.','One-off download with clearly described usage rights.',4,15,'Templates are not legal contracts; do not imply legal protection.','▧'],
+['Freelancer onboarding pack','Products','freelance templates client','A client welcome guide, project brief and handover checklist.','first-time freelancers','Test the intake questions with one real project.','One-off toolkit sales with optional updated editions.',5,10,'Keep the product specific; generic documents are easy to substitute.','✳'],
+['Small-home layout kit','Products','homes design templates','Printable room grids and furniture planning worksheets.','renters arranging small rooms','Create a scaled room worksheet and test it in two rooms.','Printable bundle and editable digital files.',5,20,'Check printing scale carefully and explain measurement tolerances.','⌑'],
+['Local adventure cards','Products','travel walks local family','A printable deck of short, nearby day-out plans.','families planning affordable weekends','Verify five accessible outings and test one printed card with a family.','Digital card packs organised by area.',6,30,'Routes, opening hours and access change; include dates and safety notes.','✧'],
+['Job application organiser','Products','jobs templates CV work','A tracker and checklist to make applications easier to manage.','jobseekers juggling multiple applications','Test one week of application tracking with three users.','Low-cost editable template bundle.',4,10,'Never promise job offers or invent experience in sample applications.','✓'],
+['Niche research prompt pack','Products','AI prompts research business','A tested set of prompts for a single repeatable research task.','solo makers interviewing potential customers','Test five interview-analysis prompts against consented anonymised notes.','One-off prompt system with worked examples.',5,10,'AI outputs need checking; never upload private interviews without consent.','{ }']
 ];
-
-let quizStep = 0;
-const scores = { content: 0, saas: 0, products: 0 };
-const quizContent = document.querySelector("#quizContent");
-
-function renderQuiz() {
-  document.querySelectorAll(".step-dots span").forEach((dot, i) => dot.classList.toggle("active", i === quizStep));
-  if (quizStep >= quiz.length) return renderResult();
-  const item = quiz[quizStep];
-  quizContent.innerHTML = `<span class="quiz-progress">QUESTION ${quizStep + 1} OF ${quiz.length}</span><h3>${item.q}</h3><div class="answer-list">${item.answers.map(([label, model]) => `<button class="answer" data-answer="${model}">${label}</button>`).join("")}</div>`;
-  quizContent.querySelectorAll("[data-answer]").forEach(button => button.addEventListener("click", () => { scores[button.dataset.answer]++; quizStep++; renderQuiz(); }));
+const ideas=rows.map((r,id)=>({id,title:r[0],category:r[1],tags:r[2],desc:r[3],audience:r[4],test:r[5],revenue:r[6],time:r[7],cost:r[8],risk:r[9],symbol:r[10]}));
+const colors={Content:'#b8baff',Software:'#98cedb',Products:'#edbad7'};
+let state={saved:[],plan:null,paused:false},category='all',toastTimer;
+try { const value=JSON.parse(localStorage.getItem('sf-v2')); if(value && typeof value==='object'){state.saved=Array.isArray(value.saved)?value.saved.filter(id=>Number.isInteger(id)&&ideas[id]):[];state.paused=value.paused===true;if(value.plan&&ideas[value.plan.id]&&typeof value.plan.audience==='string'&&Number.isFinite(value.plan.hours)&&Array.isArray(value.plan.done))state.plan=value.plan;} } catch {}
+function persist(){try{localStorage.setItem('sf-v2',JSON.stringify(state));}catch{notify('Browser storage unavailable. Download your plan to keep it.');}}
+function notify(message){$('#toast').textContent=message;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),4000);}
+function renderIdeas(){
+ let list=ideas.filter(i=>(category==='all'||i.category===category)&&i.time<=Number($('#time').value)&&[i.title,i.tags,i.desc,i.audience].join(' ').toLowerCase().includes($('#search').value.trim().toLowerCase()));
+ if($('#sort').value==='time')list.sort((a,b)=>a.time-b.time);if($('#sort').value==='cost')list.sort((a,b)=>a.cost-b.cost);
+ $('#resultCount').textContent=list.length+' ideas on the shelf';
+ $('#ideaGrid').innerHTML=list.map(i=>'<article class="idea-card" style="--art:'+colors[i.category]+'"><div class="card-art"><span class="art-symbol" aria-hidden="true">'+i.symbol+'</span><button class="save" data-save="'+i.id+'" aria-label="Save '+esc(i.title)+'" aria-pressed="'+state.saved.includes(i.id)+'">'+(state.saved.includes(i.id)?'♥':'♡')+'</button></div><div class="card-body"><small>'+i.category+' / STARTER CONCEPT</small><h3>'+i.title+'</h3><p>'+i.desc+'</p><div class="card-meta"><span>~'+i.time+' hrs/week</span><span>Test budget ~£'+i.cost+'</span></div><button class="card-link" data-open="'+i.id+'">Explore this idea <span>↗</span></button></div></article>').join('')||'<div class="no-results"><h3>No ideas match just yet.</h3><p>Try a broader search or reset your filters.</p><button class="button yellow" id="resetFilters">Reset filters</button></div>';
+ if($('#resetFilters'))$('#resetFilters').onclick=()=>{$('#search').value='';$('#time').value='99';setCategory('all');};
 }
-
-function renderResult() {
-  const winner = Object.keys(scores).sort((a, b) => scores[b] - scores[a])[0];
-  const model = models[winner];
-  quizContent.innerHTML = `<span class="quiz-result-badge">Your strongest starting fit</span><h3>${model.name}</h3><p class="result-copy">${model.description}</p><button class="button button-primary" data-result="${winner}">Open the playbook <span>↗</span></button><button class="answer" id="restartQuiz">Restart finder</button>`;
-  quizContent.querySelector("[data-result]").addEventListener("click", () => openModel(winner));
-  document.querySelector("#restartQuiz").addEventListener("click", () => { quizStep = 0; Object.keys(scores).forEach(k => scores[k] = 0); renderQuiz(); });
-}
-
-const calcConfigs = {
-  content: {
-    inputs: [{id:"visits",label:"Monthly page views",min:1000,max:250000,step:1000,value:25000},{id:"rpm",label:"Blended revenue per 1,000 views (£)",min:1,max:50,step:1,value:14}],
-    calculate: v => v.visits / 1000 * v.rpm,
-    formula: v => `${v.visits.toLocaleString()} views ÷ 1,000 × £${v.rpm} blended RPM`,
-    reality: "Traffic has to be earned and revenue per thousand views varies sharply by niche, country, season and monetisation mix."
-  },
-  saas: {
-    inputs: [{id:"customers",label:"Paying customers",min:1,max:1000,step:1,value:40},{id:"price",label:"Monthly price (£)",min:5,max:500,step:5,value:49},{id:"churn",label:"Monthly customer churn (%)",min:0,max:20,step:1,value:5}],
-    calculate: v => v.customers * v.price,
-    formula: v => `${v.customers} customers × £${v.price}/month (before fees and ${v.churn}% churn)`,
-    reality: "Recurring revenue is not passive: acquisition, support, infrastructure and replacement of churned customers continue every month."
-  },
-  products: {
-    inputs: [{id:"visitors",label:"Monthly offer-page visitors",min:100,max:100000,step:100,value:2500},{id:"conversion",label:"Purchase conversion (%)",min:.1,max:10,step:.1,value:2},{id:"aov",label:"Average order value (£)",min:5,max:500,step:5,value:39}],
-    calculate: v => v.visitors * (v.conversion / 100) * v.aov,
-    formula: v => `${v.visitors.toLocaleString()} visitors × ${v.conversion}% × £${v.aov} average order`,
-    reality: "Gross sales exclude platform fees, refunds, taxes and the time or cost required to consistently attract qualified visitors."
-  }
-};
-
-const dynamicInputs = document.querySelector("#dynamicInputs");
-const calcModel = document.querySelector("#calcModel");
-function renderCalculator() {
-  const config = calcConfigs[calcModel.value];
-  dynamicInputs.innerHTML = config.inputs.map(i => `<label>${i.label}<div class="range-wrap"><input type="range" id="${i.id}" min="${i.min}" max="${i.max}" step="${i.step}" value="${i.value}"><output class="range-value" for="${i.id}">${i.value}</output></div></label>`).join("");
-  dynamicInputs.querySelectorAll("input").forEach(input => input.addEventListener("input", () => { input.nextElementSibling.value = Number(input.value).toLocaleString(); calculate(); }));
-  calculate();
-}
-function calculate() {
-  const config = calcConfigs[calcModel.value];
-  const values = Object.fromEntries(config.inputs.map(i => [i.id, Number(document.querySelector(`#${i.id}`).value)]));
-  const revenue = config.calculate(values);
-  document.querySelector("#revenueResult").textContent = revenue.toLocaleString("en-GB", {style:"currency",currency:"GBP",maximumFractionDigits:0});
-  document.querySelector("#resultFormula").textContent = config.formula(values);
-  document.querySelector("#realityText").textContent = config.reality;
-  document.querySelector("#resultBar").style.width = `${Math.min(100, 8 + Math.log10(Math.max(revenue, 1)) * 20)}%`;
-}
-
-const roadmaps = {
-  content: [["Week 1","Find the gap","Pick one audience and analyse 30 questions, existing results and missing firsthand value.","Deliverable: niche brief"],["Week 2","Build the map","Cluster questions into five useful topic groups and outline ten genuinely distinct pieces.","Deliverable: editorial map"],["Week 3","Publish proof","Create three excellent pages with examples, sources, clear authorship and useful structure.","Deliverable: 3 live articles"],["Week 4","Start distribution","Share where the audience already gathers, collect feedback and improve the pages.","Deliverable: first search + referral data"]],
-  saas: [["Week 1","Interview the pain","Speak to ten target users about the last time the workflow failed or cost them time.","Deliverable: interview notes"],["Week 2","Sell it manually","Offer the result as a concierge service before building the full product.","Deliverable: first paid or committed pilot"],["Week 3","Build the wedge","Automate only the most repetitive, valuable step in the workflow.","Deliverable: working narrow MVP"],["Week 4","Measure retention","Onboard pilots, observe usage and ask what would make the tool indispensable.","Deliverable: activation baseline"]],
-  products: [["Week 1","Choose one job","Define one buyer, one urgent task and the measurable result your product helps create.","Deliverable: offer statement"],["Week 2","Pre-sell the outcome","Create a clear sales page and show the concept to twenty qualified potential buyers.","Deliverable: demand evidence"],["Week 3","Build the minimum","Produce the smallest polished kit that fully delivers the promised outcome.","Deliverable: version one"],["Week 4","Launch and learn","Run a focused launch, watch objections and revise positioning before adding more products.","Deliverable: sales + objection log"]]
-};
-function renderRoadmap(type="content") {
-  document.querySelector("#roadmapGrid").innerHTML = roadmaps[type].map(w => `<article class="week"><small>${w[0]}</small><h3>${w[1]}</h3><p>${w[2]}</p><span class="deliverable">${w[3]}</span></article>`).join("");
-}
-
-const dialog = document.querySelector("#modelDialog");
-function openModel(type) {
-  const m = models[type];
-  document.querySelector("#dialogContent").innerHTML = `<div class="dialog-body"><span class="kicker">${m.name}</span><h2>${m.headline}</h2><p>${m.description}</p><ul>${m.strengths.map(s => `<li>${s}</li>`).join("")}</ul><p class="warning"><strong>Watch-out:</strong> ${m.risk}</p><a class="button button-primary" href="#roadmap" data-dialog-roadmap="${type}">View 30-day roadmap <span>↗</span></a></div>`;
-  dialog.showModal();
-  dialog.querySelector("[data-dialog-roadmap]").addEventListener("click", () => { setRoadmap(type); dialog.close(); });
-}
-function setRoadmap(type) {
-  document.querySelectorAll("[data-roadmap]").forEach(b => b.classList.toggle("active", b.dataset.roadmap === type)); renderRoadmap(type);
-}
-
-document.querySelectorAll("[data-open-model]").forEach(b => b.addEventListener("click", () => openModel(b.dataset.openModel)));
-document.querySelector(".dialog-close").addEventListener("click", () => dialog.close());
-dialog.addEventListener("click", e => { if (e.target === dialog) dialog.close(); });
-document.querySelectorAll("[data-roadmap]").forEach(b => b.addEventListener("click", () => setRoadmap(b.dataset.roadmap)));
-calcModel.addEventListener("change", renderCalculator);
-document.querySelector("#recalculate").addEventListener("click", calculate);
-document.querySelector("#year").textContent = new Date().getFullYear();
-renderQuiz(); renderCalculator(); renderRoadmap();
+function setCategory(value){category=value;document.querySelectorAll('[data-category]').forEach(b=>{b.classList.toggle('active',b.dataset.category===value);b.setAttribute('aria-pressed',b.dataset.category===value);});renderIdeas();}
+function renderSaved(){$('#savedCount').textContent=state.saved.length;$('#shortlist').innerHTML=state.saved.length?state.saved.map(id=>'<button data-choose="'+id+'">♥ '+ideas[id].title+' ↗</button>').join(''):'<p>♡ Your shelf is empty. Tap a heart on an idea to save it here.</p>';}
+function save(id){if(state.saved.includes(id))state.saved=state.saved.filter(x=>x!==id);else state.saved.push(id);persist();renderIdeas();renderSaved();}
+function openIdea(id){const i=ideas[id];$('#detailBody').innerHTML='<span class="tag">'+i.category+' / EXAMPLE IDEA</span><h2 class="detail-title">'+i.title+'</h2><p>'+i.desc+'</p><h3>Who it could help</h3><p>'+i.audience+'</p><h3>Your first experiment</h3><p>'+i.test+'</p><h3>How it could earn</h3><p>'+i.revenue+'</p><h3>Before you commit</h3><p>'+i.risk+'</p><p class="small">Planning estimates: about '+i.time+' hours/week; £'+i.cost+' for a small test. These are editorial assumptions, not supplier quotes or guarantees.</p><button class="button yellow" data-choose="'+id+'">Make a plan for this ↗</button>';$('#detail').showModal();}
+function choose(id){$('#planIdea').value=id;$('#audience').value=ideas[id].audience;$('#hours').value=ideas[id].time;if($('#detail').open)$('#detail').close();location.hash='workbench';$('#audience').focus({preventScroll:true});}
+function tasks(p){const i=ideas[p.id],count=p.hours<5?3:5;return ['Week 1 · Speak to '+count+' people in your audience: '+p.audience+'. Ask about their last experience of this problem.','Week 1 · Write down current alternatives, actual frustrations and whether anyone already pays for help.','Week 2 · '+i.test,'Week 2 · Show your draft to '+count+' target users. Record what they use, ignore or ask to change.','Week 3 · '+({Content:'Publish one carefully checked article with original examples and transparent sourcing.',Software:'Build only the most valuable workflow from your manual pilot; test errors and privacy controls.',Products:'Package one complete, editable resource with clear instructions and a worked example.'}[i.category]),'Week 3 · Test a specific offer and price with your audience. Ask for a concrete commitment, not just compliments.','Week 4 · '+({Content:'Share your article in a relevant community where promotion is permitted. Track useful replies and visits.',Software:'Onboard one pilot user and observe whether they return to use the core workflow.',Products:'Show a preview to qualified buyers. Track clicks, questions and actual purchase intent.'}[i.category]),'Week 4 · Review the evidence: continue if people use or commit to the offer; revise or stop if the problem is not important enough.'];}
+function renderPlan(){const p=state.plan;if(!p)return;const t=tasks(p),done=t.filter((_,n)=>p.done.includes(n)).length;$('#export').disabled=false;$('#planOutput').innerHTML='<h3 class="plan-title">'+esc(ideas[p.id].title)+'</h3><p class="small">For '+esc(p.audience)+' · '+p.hours+' hours/week · '+(p.hours*4)+' hours across four weeks. '+(p.hours<ideas[p.id].time?'Your time is below the suggested commitment; reduce scope or extend the timeline.':'Treat this as a test schedule, not a revenue deadline.')+'</p><progress max="8" value="'+done+'" aria-label="Completed launch tasks"></progress><p class="small">'+done+' of 8 steps complete</p>'+t.map((text,n)=>'<label class="task"><input type="checkbox" data-task="'+n+'" '+(p.done.includes(n)?'checked':'')+'><span>'+esc(text)+'</span></label>').join('');}
+$('#planForm').onsubmit=e=>{e.preventDefault();const audience=$('#audience').value.trim();if(!audience){$('#audience').focus();return;}const id=Number($('#planIdea').value),hours=Number($('#hours').value);const same=state.plan&&state.plan.id===id&&state.plan.audience===audience&&state.plan.hours===hours;state.plan={id,audience,hours,done:same?state.plan.done:[]};persist();renderPlan();notify('Your plan is ready. Tick off your first experiment.');};
+$('#planOutput').onchange=e=>{if(e.target.dataset.task===undefined)return;const n=Number(e.target.dataset.task);state.plan.done=e.target.checked?[...new Set([...state.plan.done,n])]:state.plan.done.filter(x=>x!==n);persist();renderPlan();};
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.save!==undefined)save(Number(b.dataset.save));if(b.dataset.open!==undefined)openIdea(Number(b.dataset.open));if(b.dataset.choose!==undefined)choose(Number(b.dataset.choose));if(b.dataset.category)setCategory(b.dataset.category);});
+$('#closeDialog').onclick=()=>$('#detail').close();
+$('#detail').onclick=e=>{if(e.target===$('#detail')){const r=$('#detail').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('#detail').close();}};
+$('#surprise').onclick=()=>openIdea(Math.floor(Math.random()*ideas.length));
+$('#search').oninput=renderIdeas;$('#time').onchange=renderIdeas;$('#sort').onchange=renderIdeas;
+$('#planIdea').innerHTML=ideas.map(i=>'<option value="'+i.id+'">'+i.title+'</option>').join('');
+$('#export').onclick=()=>{if(!state.plan)return;const p=state.plan;const body='# '+ideas[p.id].title+'\n\nAudience: '+p.audience+'\nTime: '+p.hours+' hours/week\n\n'+tasks(p).map((t,n)=>'- ['+(p.done.includes(n)?'x':' ')+'] '+t).join('\n\n')+'\n\nThis is an experimental plan, not a promise of income.\n';const url=URL.createObjectURL(new Blob([body],{type:'text/markdown'}));const a=document.createElement('a');a.href=url;a.download='my-signalfoundry-plan.md';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+$('#makePrompt').onclick=()=>{const topic=$('#topic').value.trim();if(!topic){notify('Add a topic or problem first.');$('#topic').focus();return;}const type=$('#promptType').value;const instruction={content:'Create a practical article outline. Include reader intent, distinct headings, firsthand examples I need to collect, facts needing sources and a publication checklist. Do not invent statistics, citations or personal experience.',software:'Write a narrow MVP specification. Include the user problem, core workflow, inputs and outputs, empty and error states, privacy requirements, acceptance tests and what NOT to build yet. Identify assumptions that need customer interviews.',product:'Design a small digital product brief. Include the buyer, promised outcome, minimum deliverables, a worked example, quality checklist and a low-cost demand test. Avoid guaranteed results or unsupported claims.'}[type];$('#promptOutput').value='Topic / problem: '+topic+'\n\n'+instruction+'\n\nAudience: '+($('#audience').value.trim()||'Ask me to define the target audience before proceeding.')+'\n\nSeparate verified facts from assumptions. Use plain English. End with the three most useful next actions.';$('#copyPrompt').disabled=false;};
+$('#copyPrompt').onclick=async()=>{try{await navigator.clipboard.writeText($('#promptOutput').value);notify('Prompt copied. Paste it into your AI assistant.');}catch{$('#promptOutput').focus();$('#promptOutput').select();notify('Select and copy the highlighted prompt.');}};
+const gbp=n=>n.toLocaleString('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:2});
+function calculate(){const inputs=['price','sales','fees','costs'].map(id=>$('#'+id));if(inputs.some(i=>!i.validity.valid||i.value==='')){$('#profit').textContent='—';$('#math').textContent='Enter valid, non-negative values; fees must be 0–100%.';return;}const [price,sales,fees,costs]=inputs.map(i=>Number(i.value)),gross=price*sales,net=gross*(1-fees/100)-costs;$('#profit').textContent=gbp(net);$('#math').textContent=gbp(gross)+' revenue − '+gbp(gross*fees/100)+' variable costs − '+gbp(costs)+' fixed costs.';}
+['price','sales','fees','costs'].forEach(id=>$('#'+id).oninput=calculate);
+function motion(){document.body.classList.toggle('paused',state.paused);$('#motion').setAttribute('aria-pressed',state.paused);$('#motion').textContent=state.paused?'Resume motion':'Pause motion';}
+$('#motion').onclick=()=>{state.paused=!state.paused;persist();motion();};
+if(state.plan){$('#planIdea').value=state.plan.id;$('#audience').value=state.plan.audience;$('#hours').value=state.plan.hours;}
+renderIdeas();renderSaved();renderPlan();calculate();motion();

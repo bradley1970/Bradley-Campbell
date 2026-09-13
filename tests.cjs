@@ -1,0 +1,46 @@
+// Run: NODE_PATH=/path/to/node_modules node tests.cjs (requires jsdom).
+const { JSDOM } = require('jsdom');
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const html = fs.readFileSync('index.html', 'utf8');
+const js = fs.readFileSync('script.js', 'utf8');
+function boot(saved) {
+  const dom = new JSDOM(html, { url:'https://example.com/', runScripts:'outside-only' });
+  const w=dom.window;
+  w.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
+  w.HTMLDialogElement.prototype.close=function(){this.open=false;};
+  if(saved)w.localStorage.setItem('sf-v2',saved);
+  w.eval(js);
+  return dom;
+}
+const dom=boot(),w=dom.window,d=w.document;
+const $=s=>d.querySelector(s),all=s=>d.querySelectorAll(s);
+const input=(s,v,event='input')=>{$(s).value=v;$(s).dispatchEvent(new w.Event(event,{bubbles:true}));};
+assert.equal(all('.idea-card').length,18);
+$('[data-category="Software"]').click();assert.equal(all('.idea-card').length,6);
+input('#time','5','change');assert.equal(all('.idea-card').length,0);assert.ok($('#resetFilters'));
+$('#resetFilters').click();assert.equal(all('.idea-card').length,18);
+input('#search','cats');assert.equal(all('.idea-card').length,2);
+input('#search','');input('#sort','cost','change');assert.equal(all('.idea-card').length,18);
+$('[data-save="0"]').click();assert.equal($('#savedCount').textContent,'1');
+$('[data-open="6"]').click();assert.equal($('#detail').open,true);
+$('#detail [data-choose="6"]').click();assert.equal($('#detail').open,false);assert.equal($('#planIdea').value,'6');
+input('#audience','Electricians <script>alert(1)</script>');input('#hours','3');
+$('#planForm').dispatchEvent(new w.Event('submit',{cancelable:true}));
+assert.equal(all('.task').length,8);assert.equal($('#planOutput script'),null);
+assert.match($('#planOutput').textContent,/reduce scope/);
+$('[data-task="0"]').click();assert.equal($('progress').value,1);
+const saved=w.localStorage.getItem('sf-v2');const reload=boot(saved);
+assert.equal(reload.window.document.querySelector('progress').value,1);
+assert.equal(reload.window.document.querySelector('#savedCount').textContent,'1');
+input('#topic','Trade quote follow-ups');$('#makePrompt').click();assert.match($('#promptOutput').value,/Trade quote follow-ups/);
+input('#promptType','software','change');$('#makePrompt').click();assert.match($('#promptOutput').value,/acceptance tests/);
+input('#price','29');input('#sales','20');assert.equal($('#profit').textContent,'£472.00');
+input('#fees','101');assert.equal($('#profit').textContent,'—');input('#fees','10');
+input('#sales','0');assert.equal($('#profit').textContent,'-£50.00');
+$('#motion').click();assert.ok(d.body.classList.contains('paused'));
+const ids=Array.from(all('[id]')).map(x=>x.id);assert.equal(ids.length,new Set(ids).size);
+for(const a of all('a[href^="#"]'))assert.ok(d.getElementById(a.getAttribute('href').slice(1)));
+const corrupt=boot('{bad json');assert.equal(corrupt.window.document.querySelectorAll('.idea-card').length,18);
+console.log('PASS: 18 ideas, filters, empty/reset, search, save/reload, dialogs, plans, XSS escaping, task persistence, prompts, calculator validation, motion, IDs, anchors, corrupted storage.');
+dom.window.close();reload.window.close();corrupt.window.close();
